@@ -2,17 +2,28 @@
 
 Docker image containing geospatial data for Protx portal.
 
+Used for:
+ - [Protx - forked from CepV2](https://github.com/TACC/protx)
+ - [Protx - dashboard](https://github.com/TACC/protx-dashboard)
+
 ## Background 
 
-A first pass of this work was described in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
+The initial work was described in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
 
 The basic steps are:
-* convert shapefiles to geojson (using gdal's `ogr2ogr`)
-* use `tippecanoe` to create static vector tiles 
+- convert shapefiles to geojson (using gdal's `ogr2ogr`)
+- use `tippecanoe` to create static vector tiles
 
-### Status and next steps
+## Status and next steps
 
-This works but (i) frontend gets a lot of missing errors when zooming to places outside the bounds of our data and (ii) the size of the data is large.  COOKS-27 details a possible approach to improve things by serving the tiles (see ticket for more info: "To create mbtiles adn then serve them through tileserver-gl (TileServer-GL, https://github.com/klokantech/tileserver-gl)) 
+
+### Vector tiles
+These tippecanoe uncompressed files work but there are some shortcomings: (i) frontend gets a lot of missing errors when zooming to places outside the bounds of our generated vector tiles and (ii) the size of the data is large.  COOKS-27 details a possible approach to improve things by serving the tiles (see ticket for more info: "To create mbtiles and then serve them through tileserver-gl (TileServer-GL, https://github.com/klokantech/tileserver-gl)) . Or there are other ways to do this (postgis?)
+
+
+### Geospatial database
+
+We need a geospatial database (postgis) and endpoint to handle queries like (1) searching through names (e.g. do i have a Bexar county?) and (2) what is the extent of my selected region (e.g. "what is the outline of bear county")
 
 
 ## Original data
