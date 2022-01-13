@@ -6,6 +6,15 @@ Used for:
  - [Protx - forked from CepV2](https://github.com/TACC/protx)
  - [Protx - dashboard](https://github.com/TACC/protx-dashboard)
 
+
+## Build
+
+To build and deploy to dockerhub:
+```
+make build
+make deploy
+```
+
 ## Background 
 
 The initial work was described in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
