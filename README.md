@@ -1,6 +1,6 @@
 # Protx Geospatial Data
 
-Docker image containing geospatial data for Protx portal.
+Docker [image](https://hub.docker.com/r/taccwma/protx-geospatial) containing geospatial data for Protx portal.
 
 Used by the following repos:
  - [Protx - forked from CepV2](https://github.com/TACC/protx)
@@ -12,7 +12,7 @@ Used by the following repos:
 To build and deploy to dockerhub:
 ```
 make build
-make deploy
+make publish
 ```
 
 ## Background 
