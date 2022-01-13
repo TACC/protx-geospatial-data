@@ -2,7 +2,7 @@
 
 Docker image containing geospatial data for Protx portal.
 
-Used for:
+Used by the following repos:
  - [Protx - forked from CepV2](https://github.com/TACC/protx)
  - [Protx - dashboard](https://github.com/TACC/protx-dashboard)
 
@@ -17,13 +17,13 @@ make deploy
 
 ## Background 
 
-The initial work was described in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
+The initial work is described in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
 
 The basic steps are:
 - convert shapefiles to geojson (using gdal's `ogr2ogr`)
 - use `tippecanoe` to create static vector tiles
 
-## Status and next steps
+## Status and Next Steps
 
 
 ### Vector tiles
@@ -37,11 +37,8 @@ We need a geospatial database (postgis) and endpoint to handle queries like (1) 
 
 ## Original data
 
-This folder contains the original data used in this docker image.
-
-### Vector files
-
-In early versions of the portal, we were also presenting census tracs, urban areas, zip codes and dfps regions. Currently, we are only using county data with an outline of texas but a complete list of other geographic regions used in earlier demos can be found in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
-
+This folder contains the original data used in this docker image:
 * `texas_counties.shp` is from `/corral-secure/projects/Cooks-ProTX/spatial/tigris/texas_counties/`
 * `Texas_State_Boundary.geojson` is from https://gis-txdot.opendata.arcgis.com/datasets/texas-state-boundary/explore 
+
+Note: In early versions of the portal, we were also presenting census tracs, urban areas, zip codes and dfps regions. Currently, we are only using county data with an outline of texas but a complete list of other geographic regions used in earlier demos can be found in [confluence](https://confluence.tacc.utexas.edu/display/UP/Demo+map+notes+for+April+15%2C+2021).
