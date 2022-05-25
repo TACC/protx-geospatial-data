@@ -6,6 +6,11 @@ Used by the following repos:
  - [Protx - forked from CepV2](https://github.com/TACC/protx)
  - [Protx - dashboard](https://github.com/TACC/protx-dashboard)
 
+It currently provides:
+
+* geojson files (i.e. Texas_State_Boundary.geojson)
+* uncompressed/static vector tiles (i.e. county)
+* postigs with preloaded data (i.e. county)
 
 ## Build
 
