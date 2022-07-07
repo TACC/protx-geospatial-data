@@ -9,10 +9,23 @@ COPY --from=gdal /processing/ /jsons
 RUN mkdir -p county
 RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/county/2019 -l singleLayer -n "county" /jsons/texas_counties.json
 
-from alpine:latest
+FROM postgis/postgis:13-3.2 as postgis-data-builder
+RUN apt update
+RUN apt install -y postgis
+RUN which shp2pgsql
+WORKDIR /postgis_data
+COPY original_files/ /original_files
+RUN shp2pgsql -I -s 4326 /original_files/texas_counties/texas_counties.shp > counties.sql
+
+from postgis/postgis:13-3.2
+
 WORKDIR /data
+
 # Add uncompressed vector tiles that we created via tippecanoe/gdal 
 COPY --from=tippecanoe /result /data/vector 
 
 # Add non-processed outline of texas
 ADD original_files/Texas_State_Boundary.geojson .
+
+# Add data for database init
+COPY --from=postgis-data-builder /postgis_data/*.sql /docker-entrypoint-initdb.d/

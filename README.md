@@ -2,7 +2,14 @@
 
 Docker [image](https://hub.docker.com/r/taccwma/protx-geospatial) containing geospatial data for Protx portal.
 
-Used by the following repos:
+|      | How it is used                                                               | Additional notes                     |   |
+|-----------------------------|------------------------------------------------------------------------------|--------------------------------------|---|
+| **geojson files**               | served via nginx to frontend client                                          |                                      |   |
+| **vector tiles**                | served via nginx to frontend client                                          | These are uncompressed vector tilest |   |
+| **PostgreSQL/PostGIS database** | utilized by protx backend to create some responses (e.g. resource downloads) |                                      |   |
+
+
+This image is Used by the following repos:
  - [Protx - forked from CepV2](https://github.com/TACC/protx)
  - [Protx - dashboard](https://github.com/TACC/protx-dashboard)
 
