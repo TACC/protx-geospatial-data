@@ -3,6 +3,8 @@ WORKDIR /processing
 COPY original_files /original_files
 RUN ogr2ogr -f GeoJSON texas_counties.json -t_srs EPSG:4326 /original_files/texas_counties/texas_counties.shp
 RUN ogr2ogr -f GeoJSON texas_census_tracts.json -t_srs EPSG:4326 /original_files/texas_census_tracts/census_tracts_2019.shp
+RUN ogr2ogr -f GeoJSON dfps_regions.json -t_srs EPSG:4326 /original_files/texas_dfps_regions_2019/dfps_regions.shp
+
 
 FROM morlov/tippecanoe:1.35.0 as tippecanoe
 WORKDIR /result
@@ -11,6 +13,9 @@ RUN mkdir -p county
 RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/county/2019 -l singleLayer -n "county" /jsons/texas_counties.json
 RUN mkdir -p tract
 RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/tract/2019 -l singleLayer --include "GEOID" -n "tract" /jsons/texas_census_tracts.json
+RUN mkdir -p dfps_region
+RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/dfps_region/2019 -l singleLayer --include "GEOID" -n "dfps_region" /jsons/dfps_regions.json
+
 
 FROM postgis/postgis:13-3.2 as postgis-data-builder
 RUN apt update
@@ -20,6 +25,7 @@ WORKDIR /postgis_data
 COPY original_files/ /original_files
 RUN shp2pgsql -I -s 4326 /original_files/texas_counties/texas_counties.shp > counties.sql
 RUN shp2pgsql -I -s 4326 /original_files/texas_census_tracts/census_tracts_2019.shp > census_tracts.sql
+RUN shp2pgsql -I -s 4326 /original_files/texas_dfps_regions_2019/dfps_regions.shp > dfps_regions.sql
 
 from postgis/postgis:13-3.2
 
