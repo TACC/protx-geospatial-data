@@ -27,9 +27,29 @@ RUN shp2pgsql -I -s 4326 /original_files/texas_counties/texas_counties.shp > cou
 RUN shp2pgsql -I -s 4326 /original_files/texas_census_tracts/census_tracts_2019.shp > census_tracts.sql
 RUN shp2pgsql -I -s 4326 /original_files/texas_dfps_regions_2019/dfps_regions.shp > dfps_regions.sql
 
-from postgis/postgis:13-3.2
+
+# Preload database (see https://cadu.dev/creating-a-docker-image-with-database-preloaded/)
+FROM  postgis/postgis:13-3.2 as postgis-init
+
+# Add data for database init
+COPY --from=postgis-data-builder /postgis_data/*.sql /docker-entrypoint-initdb.d/
+# ensure posgres daemon will not start as we just want to load the data
+RUN ["sed", "-i", "s/exec \"$@\"/echo \"skipping...\"/", "/usr/local/bin/docker-entrypoint.sh"]
+
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=postgres
+ENV POSTGRES_DB=postgres
+ENV PGDATA=/data
+
+# run postgres and load the data
+RUN ["/usr/local/bin/docker-entrypoint.sh", "postgres"]
+
+FROM postgis/postgis:13-3.2
 
 WORKDIR /data
+
+# Add the pre-loaded database
+COPY --from=postgis-init /data $PGDATA
 
 # Add uncompressed vector tiles that we created via tippecanoe/gdal 
 COPY --from=tippecanoe /result /data/vector 
@@ -37,5 +57,3 @@ COPY --from=tippecanoe /result /data/vector
 # Add non-processed outline of texas
 ADD original_files/Texas_State_Boundary.geojson .
 
-# Add data for database init
-COPY --from=postgis-data-builder /postgis_data/*.sql /docker-entrypoint-initdb.d/
