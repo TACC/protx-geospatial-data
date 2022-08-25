@@ -10,11 +10,11 @@ FROM morlov/tippecanoe:1.35.0 as tippecanoe
 WORKDIR /result
 COPY --from=gdal /processing/ /jsons 
 RUN mkdir -p county
-RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/county/2019 -l singleLayer -n "county" /jsons/texas_counties.json
+RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 --include GEO_ID -e /result/county/2019 -l singleLayer -n "county" /jsons/texas_counties.json
 RUN mkdir -p tract
-RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/tract/2019 -l singleLayer --include "GEOID" -n "tract" /jsons/texas_census_tracts.json
+RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 --include GEOID -e /result/tract/2019 -l singleLayer -n "tract" /jsons/texas_census_tracts.json
 RUN mkdir -p dfps_region
-RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 -e /result/dfps_region/2019 -l singleLayer --include "GEOID" -n "dfps_region" /jsons/dfps_regions.json
+RUN /usr/bin/tippecanoe --no-tile-compression --coalesce-densest-as-needed --maximum-tile-bytes=250000 --include Sheet1__Re -e /result/dfps_region/2019 -l singleLayer -n "dfps_region" /jsons/dfps_regions.json
 
 
 FROM postgis/postgis:13-3.2 as postgis-data-builder
